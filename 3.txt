@@ -1,0 +1,70 @@
+To deploy your containerized Flask web application on Google Cloud Run, you'll need to follow these steps:
+
+Step 1: Set Up a Project on Google Cloud Platform
+
+If you don't have a Google Cloud Platform (GCP) account, sign up for one at https://cloud.google.com.
+
+Create a new project or select an existing one in the GCP Console.
+
+Step 2: Enable the Cloud Run Service
+
+In the GCP Console, navigate to the "Cloud Run" service.
+
+Click "Enable" to enable the Cloud Run API for your project.
+
+Step 3: Push the Docker Image to a Container Registry
+
+Before deploying to Cloud Run, you need to push your Docker image to a container registry. You can use Google Container Registry (GCR) for this purpose.
+
+a. Authenticate Docker with GCR:
+
+Run the following command to authenticate Docker with GCR:
+
+bash
+Copy code
+gcloud auth configure-docker
+b. Tag your Docker image:
+
+Tag your locally built Docker image with a GCR registry URL. Replace [PROJECT-ID] with your GCP project ID:
+
+bash
+Copy code
+docker tag flask-app gcr.io/[PROJECT-ID]/flask-app
+c. Push the image to GCR:
+
+Push the Docker image to GCR:
+
+bash
+Copy code
+docker push gcr.io/[PROJECT-ID]/flask-app
+Step 4: Deploy the Containerized Web Application
+
+Now, deploy your containerized Flask web application to Google Cloud Run:
+
+bash
+Copy code
+gcloud run deploy flask-app \
+  --image gcr.io/[PROJECT-ID]/flask-app \
+  --platform managed \
+  --allow-unauthenticated
+Replace [PROJECT-ID] with your GCP project ID. The --allow-unauthenticated flag allows public access to your Cloud Run service. You can configure authentication and access controls as needed.
+
+Follow the prompts to choose a region and confirm deployment. Google Cloud Run will automatically handle container scaling, load balancing, and HTTPS certificate management.
+
+Step 5: Configure Environment Variables
+
+You can set environment variables for your Cloud Run service if your application requires them:
+
+bash
+Copy code
+gcloud run services update flask-app \
+  --update-env-vars KEY=VALUE,ANOTHER_KEY=ANOTHER_VALUE
+Replace KEY and VALUE with your specific environment variable names and values.
+
+Step 6: Access and Test Your Deployed Web Application
+
+After the deployment is complete, you will receive a URL where your Flask web application is accessible over HTTPS. You can find this URL in the output of the gcloud run deploy command.
+
+Visit the provided URL to access your deployed Flask web application on Google Cloud Run. Test it to ensure it works as expected.
+
+That's it! You've successfully deployed your containerized Flask web application on Google Cloud Run and configured any necessary settings.
